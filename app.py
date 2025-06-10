@@ -12,12 +12,15 @@ if not wallet_address:
 else:
     try:
         # 获取账户余额
-        response = requests.post("https://api.mainnet-beta.solana.com", json={
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "getBalance",
-            "params": [wallet_address]
-        })
+        response = requests.post(
+            "https://api.mainnet-beta.solana.com",
+            json={
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "getBalance",
+                "params": [wallet_address]
+            }
+        )
         response.raise_for_status()  # 检查请求是否成功
         balance_data = response.json()
         if 'result' not in balance_data:
@@ -26,12 +29,15 @@ else:
         st.write(f"当前钱包余额：{balance} SOL")
         
         # 获取交易记录
-        response = requests.post("https://api.mainnet-beta.solana.com", json={
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "getConfirmedSignaturesForAddress2",
-            "params": [wallet_address]
-        })
+        response = requests.post(
+            "https://api.mainnet-beta.solana.com",
+            json={
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "getConfirmedSignaturesForAddress2",
+                "params": [wallet_address]
+            }
+        )
         response.raise_for_status()  # 检查请求是否成功
         transactions_data = response.json()
         if 'result' not in transactions_data:
@@ -41,12 +47,15 @@ else:
         # 解析交易记录
         transaction_list = []
         for tx in transactions:
-            tx_details_response = requests.post("https://api.mainnet-beta.solana.com", json={
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "getConfirmedTransaction",
-                "params": [tx['signature']]
-            })
+            tx_details_response = requests.post(
+                "https://api.mainnet-beta.solana.com",
+                json={
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "getConfirmedTransaction",
+                    "params": [tx['signature']]
+                }
+            )
             tx_details_response.raise_for_status()  # 检查请求是否成功
             tx_details_data = tx_details_response.json()
             if 'result' not in tx_details_data:
