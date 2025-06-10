@@ -1,3 +1,4 @@
 streamlit
 solana
 pandas
+solana
