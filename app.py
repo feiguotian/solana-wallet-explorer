@@ -9,6 +9,7 @@ if not wallet_address:
     st.warning("请输入钱包地址")
 else:
     try:
+        # 获取账户余额
         response = requests.post(
             "https://api.mainnet-beta.solana.com",
             json={
@@ -25,6 +26,8 @@ else:
         else:
             balance = balance_data['result']['value'] / 1_000_000_000
             st.write(f"当前钱包余额：{balance} SOL")
+            
+            # 获取交易记录
             response = requests.post(
                 "https://api.mainnet-beta.solana.com",
                 json={
@@ -85,5 +88,7 @@ else:
                         st.info("未找到交易记录")
     except requests.exceptions.RequestException as e:
         st.error(f"网络请求出错：{e}")
+    except KeyError as e:
+        st.error(f"数据解析错误：缺失键 {e}")
     except Exception as e:
         st.error(f"查询出错：{e}")
