@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import pandas as pd
 from solana.rpc.api import Client
-from solana.rpc.types import PublicKey
+from solders.pubkey import PublicKey
 
 # 连接到 Solana 主网
 solana_client = Client("https://api.mainnet-beta.solana.com")
