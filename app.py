@@ -4,7 +4,7 @@ import pandas as pd
 
 # 设置 Helius API 端点和你的 API 密钥
 HELIOUS_MAINNET = "https://mainnet.helius-rpc.com/"
-API_KEY = "{ccf35c43-496e-4514-b595-1039601450f2}"  # 替换为你的 API 密钥
+API_KEY = "ccf35c43-496e-4514-b595-1039601450f2"  # 替换为你的 API 密钥
 
 st.title("Solana 钱包交易查询")
 
