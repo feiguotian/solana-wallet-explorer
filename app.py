@@ -31,7 +31,7 @@ else:
         
         # 解析交易记录
         transaction_list = []
-        for tx in transactions.result:
+        for tx in transactions:
             tx_details = solana_client.get_transaction(tx.signature)
             tx_data = tx_details.result.transaction
             
