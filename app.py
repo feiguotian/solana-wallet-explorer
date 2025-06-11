@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import pandas as pd
 from solana.rpc.api import Client
-from solders.pubkey import Pubkey as PublicKey
+from solders.pubkey import Pubkey
 
 # 连接到 Solana 主网
 solana_client = Client("https://api.mainnet-beta.solana.com")
@@ -17,11 +17,11 @@ if not wallet_address:
 else:
     try:
         # 获取账户信息
-        public_key = PublicKey(wallet_address)
+        public_key = Pubkey.from_string(wallet_address)
         
         # 获取账户余额（以 SOL 为单位）
         balance_info = solana_client.get_balance(public_key)
-        balance = balance_info['result']['value'] / 1_000_000_000  # 将 lamports 转换为 SOL
+        balance = balance_info.value / 1_000_000_000  # 将 lamports 转换为 SOL
         
         # 显示余额
         st.write(f"当前钱包余额：{balance} SOL")
@@ -31,9 +31,9 @@ else:
         
         # 解析交易记录
         transaction_list = []
-        for tx in transactions['result']:
-            tx_details = solana_client.get_confirmed_transaction(tx['signature'])
-            tx_data = tx_details['result']['transaction']
+        for tx in transactions.result:
+            tx_details = solana_client.get_confirmed_transaction(tx.signature)
+            tx_data = tx_details.result.transaction
             
             # 提取交易信息
             tx_type = "未知"
@@ -44,9 +44,9 @@ else:
             
             # 这里简化处理，实际应用中需要更复杂的逻辑来解析交易类型和金额
             # 以下为示例数据，实际应从交易数据中解析得到
-            tx_type = "转入" if tx_data['message']['accountKeys'][0] == str(public_key) else "转出"
+            tx_type = "转入" if tx_data.message.account_keys[0] == str(public_key) else "转出"
             tx_amount = 0.01  # 示例金额
-            other_address = tx_data['message']['accountKeys'][1] if len(tx_data['message']['accountKeys']) > 1 else "未知"
+            other_address = tx_data.message.account_keys[1] if len(tx_data.message.account_keys) > 1 else "未知"
             tx_time = pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")  # 示例时间
             
             # 添加到交易列表
