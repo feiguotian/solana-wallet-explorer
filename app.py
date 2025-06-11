@@ -61,7 +61,7 @@ else:
                     tx_details_data = tx_details_response.json()
                     if 'result' not in tx_details_data:
                         st.error("数据解析错误：API 返回的数据中没有 'result' 键")
-                        break
+                        continue  # 跳过当前交易
                     tx_details = tx_details_data['result']
                     tx_type = "未知"
                     tx_amount = 0.0
