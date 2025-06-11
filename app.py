@@ -3,8 +3,7 @@ import requests
 import pandas as pd
 
 # 设置 Helius API 端点和你的 API 密钥
-HELIOUS_MAINNET = "https://mainnet.helius-rpc.com/"
-API_KEY = "ccf35c43-496e-4514-b595-1039601450f2"  # 替换为你的 API 密钥
+HELIOUS_MAINNET = "https://mainnet.helius-rpc.com/?api-key=ccf35c43-496e-4514-b595-1039601450f2"
 
 st.title("Solana 钱包交易查询")
 
@@ -16,7 +15,6 @@ else:
         # 获取账户余额
         balance_response = requests.post(
             HELIOUS_MAINNET,
-            params={"api-key": API_KEY},
             json={
                 "jsonrpc": "2.0",
                 "id": 1,
@@ -35,7 +33,6 @@ else:
             # 获取交易记录
             transactions_response = requests.post(
                 HELIOUS_MAINNET,
-                params={"api-key": API_KEY},
                 json={
                     "jsonrpc": "2.0",
                     "id": 1,
@@ -53,7 +50,6 @@ else:
                 for tx in transactions:
                     tx_details_response = requests.post(
                         HELIOUS_MAINNET,
-                        params={"api-key": API_KEY},
                         json={
                             "jsonrpc": "2.0",
                             "id": 1,
@@ -72,27 +68,29 @@ else:
                     other_address = "未知"
                     tx_time = "未知"
                     tx_balance = "未知"
-                    if tx_details['transaction']['message']['accountKeys'][0] == wallet_address:
-                        tx_type = "转入"
-                    else:
-                        tx_type = "转出"
-                    tx_amount = 0.01
-                    other_address = tx_details['transaction']['message']['accountKeys'][1] if len(tx_details['transaction']['message']['accountKeys']) > 1 else "未知"
-                    tx_time = pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")
+                    
+                    if 'transaction' in tx_details:
+                        tx_type = "转入" if tx_details['transaction']['message']['accountKeys'][0] == wallet_address else "转出"
+                        tx_amount = 0.01  # 示例金额
+                        other_address = tx_details['transaction']['message']['accountKeys'][1] if len(tx_details['transaction']['message']['accountKeys']) > 1 else "未知"
+                        tx_time = pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")  # 示例时间
+                    
+                    # 添加到交易列表
                     transaction_list.append({
                         "时间": tx_time,
                         "类型": tx_type,
                         "金额 (SOL)": tx_amount,
                         "对方地址": other_address,
-                        "交易后余额 (SOL)": tx_balance
+                        "交易后余额 (SOL)": tx_balance  # 示例余额
                     })
+                
+                # 显示交易记录
+                if transaction_list:
+                    df = pd.DataFrame(transaction_list)
+                    st.write("交易记录：")
+                    st.dataframe(df)
                 else:
-                    if transaction_list:
-                        df = pd.DataFrame(transaction_list)
-                        st.write("交易记录：")
-                        st.dataframe(df)
-                    else:
-                        st.info("未找到交易记录")
+                    st.info("未找到交易记录")
     except requests.exceptions.RequestException as e:
         st.error(f"网络请求出错：{e}")
     except KeyError as e:
