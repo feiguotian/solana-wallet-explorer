@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import pandas as pd
 from solana.rpc.api import Client
-from solders.pubkey import Pubkey
+from solders.pubkey import Pubkey as PublicKey
 
 # 连接到 Solana 主网
 solana_client = Client("https://api.mainnet-beta.solana.com")
@@ -17,7 +17,7 @@ if not wallet_address:
 else:
     try:
         # 获取账户信息
-        public_key = Pubkey.from_string(wallet_address)
+        public_key = PublicKey(wallet_address)
         
         # 获取账户余额（以 SOL 为单位）
         balance_info = solana_client.get_balance(public_key)
