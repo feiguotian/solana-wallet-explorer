@@ -27,12 +27,12 @@ else:
         st.write(f"当前钱包余额：{balance} SOL")
         
         # 获取交易记录
-        transactions = solana_client.get_confirmed_signatures_for_address2(public_key)
+        transactions = solana_client.get_signatures_for_address(public_key)
         
         # 解析交易记录
         transaction_list = []
         for tx in transactions.result:
-            tx_details = solana_client.get_confirmed_transaction(tx.signature)
+            tx_details = solana_client.get_transaction(tx.signature)
             tx_data = tx_details.result.transaction
             
             # 提取交易信息
